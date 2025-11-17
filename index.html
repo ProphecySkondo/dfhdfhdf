@@ -22,6 +22,7 @@
                 <a class="nav-link" data-section="servers">Servers</a>
                 <a class="nav-link" data-section="messages">Messages</a>
                 <a class="nav-link" data-section="spam">Spam</a>
+                <a class="nav-link" data-section="tools">Tools</a>
                 <a class="nav-link" data-section="stats">Stats</a>
             </div>
         </div>
@@ -46,6 +47,24 @@
                 </div>
                 <button class="btn" id="loadDataBtn">Load Data</button>
             </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">How to Get Your Token</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 12px; line-height: 1.6;">
+                    1. Open Discord in your browser (not the app)<br>
+                    2. Press F12 to open Developer Tools<br>
+                    3. Go to the "Console" tab<br>
+                    4. Paste this code and press Enter:<br>
+                </p>
+                <div style="background: rgba(88, 101, 242, 0.05); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 12px;">
+                    <code style="font-family: 'Courier New', monospace; font-size: 13px; color: var(--text-secondary);">
+                        (webpackChunkdiscord_app.push([[''],{},e=>{m=[];for(let c in e.c)m.push(e.c[c])}]),m).find(m=>m?.exports?.default?.getToken!==void 0).exports.default.getToken()
+                    </code>
+                </div>
+                <p style="color: #ed4245; font-size: 13px;">
+                    ⚠️ Warning: Never share your token with anyone! It gives full access to your account.
+                </p>
+            </div>
         </section>
 
         <!-- Servers Section -->
@@ -59,6 +78,7 @@
                 <div class="action-buttons" style="margin-top: 24px;">
                     <button class="btn btn-secondary" onclick="exportServers()">Export as CSV</button>
                     <button class="btn btn-secondary" onclick="exportServersJSON()">Export as JSON</button>
+                    <button class="btn" style="background: #ed4245;" id="leaveAllServersBtn">Leave All Servers</button>
                 </div>
             </div>
         </section>
@@ -71,13 +91,18 @@
                     <input type="text" class="form-input" id="dmSearch" placeholder="Search conversations..." style="margin-bottom: 16px;">
                 </div>
                 <div id="conversationsList"></div>
+                <div class="action-buttons" style="margin-top: 24px;">
+                    <button class="btn" style="background: #ed4245;" id="deleteAllDMsBtn">Delete All DMs</button>
+                    <button class="btn" style="background: #ed4245;" id="unfriendAllBtn">Unfriend Everyone</button>
+                </div>
             </div>
         </section>
 
         <!-- Spam Section -->
         <section id="spam" class="section">
+            <!-- Message Spammer -->
             <div class="card">
-                <h2 style="margin-bottom: 24px; font-size: 24px;">Message Spammer</h2>
+                <h2 style="margin-bottom: 24px; font-size: 24px;">💬 Message Spammer</h2>
                 
                 <div class="form-group">
                     <label class="form-label">Channel ID</label>
@@ -103,17 +128,193 @@
                     <button class="btn" id="startSpamBtn">Start Spamming</button>
                     <button class="btn btn-secondary" id="stopSpamBtn" style="display: none;">Stop</button>
                 </div>
+            </div>
 
-                <div class="terminal" id="terminal">
-                    <div class="terminal-header">
-                        <span>Terminal Output</span>
-                        <button class="terminal-clear" onclick="clearTerminal()">Clear</button>
-                    </div>
-                    <div class="terminal-body" id="terminalBody">
-                        <div class="terminal-line">~ Discord Manager Terminal Ready</div>
-                        <div class="terminal-line">~ Waiting for commands...</div>
-                    </div>
+            <!-- Mass DM -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">📨 Mass DM</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Message</label>
+                    <textarea class="form-input" id="massDMMessage" rows="3" placeholder="Message to send to all friends..."></textarea>
                 </div>
+
+                <div class="form-group">
+                    <label class="form-label">Delay Between DMs (ms)</label>
+                    <input type="number" class="form-input" id="massDMDelay" placeholder="2000" value="2000" min="1000">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" id="startMassDMBtn">Start Mass DM</button>
+                    <button class="btn btn-secondary" id="stopMassDMBtn" style="display: none;">Stop</button>
+                </div>
+            </div>
+
+            <!-- Reaction Spammer -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">😀 Reaction Spammer</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Channel ID</label>
+                    <input type="text" class="form-input" id="reactChannelId" placeholder="Enter channel ID">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message ID</label>
+                    <input type="text" class="form-input" id="reactMessageId" placeholder="Enter message ID">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Emoji</label>
+                    <input type="text" class="form-input" id="reactEmoji" placeholder="👍 or custom emoji">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Spam Count</label>
+                    <input type="number" class="form-input" id="reactCount" placeholder="10" value="10" min="1">
+                </div>
+
+                <button class="btn" id="spamReactBtn">Spam Reactions</button>
+            </div>
+
+            <!-- Group DM Spammer -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">👥 Group DM Creator</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Group Name</label>
+                    <input type="text" class="form-input" id="groupDMName" placeholder="Group Chat" value="Group Chat">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Number of Groups to Create</label>
+                    <input type="number" class="form-input" id="groupDMCount" placeholder="5" value="5" min="1" max="50">
+                </div>
+
+                <button class="btn" id="createGroupDMBtn">Create Groups</button>
+            </div>
+
+            <!-- Terminal -->
+            <div class="terminal" id="terminal">
+                <div class="terminal-header">
+                    <span>Terminal Output</span>
+                    <button class="terminal-clear" onclick="clearTerminal()">Clear</button>
+                </div>
+                <div class="terminal-body" id="terminalBody">
+                    <div class="terminal-line">~ Discord Manager Terminal Ready</div>
+                    <div class="terminal-line">~ Waiting for commands...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tools Section -->
+        <section id="tools" class="section">
+            <!-- Account Disabler -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">🔴 Account Disabler</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 16px; line-height: 1.6;">
+                    This will disable your Discord account. You'll need to verify your email to re-enable it.
+                </p>
+                <button class="btn" style="background: #ed4245;" id="disableAccountBtn">Disable Account</button>
+            </div>
+
+            <!-- Status Changer -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">🟢 Status Changer</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Status</label>
+                    <select class="form-input" id="statusSelect">
+                        <option value="online">🟢 Online</option>
+                        <option value="idle">🟡 Idle</option>
+                        <option value="dnd">🔴 Do Not Disturb</option>
+                        <option value="invisible">⚫ Invisible</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Custom Status Text (Optional)</label>
+                    <input type="text" class="form-input" id="customStatusText" placeholder="Playing games...">
+                </div>
+
+                <button class="btn" id="changeStatusBtn">Change Status</button>
+            </div>
+
+            <!-- HypeSquad Changer -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">🏠 HypeSquad House</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Select House</label>
+                    <select class="form-input" id="hypesquadSelect">
+                        <option value="1">⚔️ Bravery</option>
+                        <option value="2">💎 Brilliance</option>
+                        <option value="3">⚖️ Balance</option>
+                    </select>
+                </div>
+
+                <button class="btn" id="changeHypesquadBtn">Change House</button>
+            </div>
+
+            <!-- Theme Changer -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">🎨 Theme Changer</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Select Theme</label>
+                    <select class="form-input" id="themeSelect">
+                        <option value="dark">🌙 Dark</option>
+                        <option value="light">☀️ Light</option>
+                    </select>
+                </div>
+
+                <button class="btn" id="changeThemeBtn">Change Theme</button>
+            </div>
+
+            <!-- Token Info -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">ℹ️ Token Information</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 16px;">
+                    Get detailed information about your account and token.
+                </p>
+                <button class="btn btn-secondary" id="getTokenInfoBtn">Get Token Info</button>
+            </div>
+
+            <!-- Server Nuker -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">💣 Server Nuker</h2>
+                <p style="color: #ed4245; margin-bottom: 16px; font-weight: 600;">
+                    ⚠️ DANGER: This will delete ALL channels and roles in a server!
+                </p>
+                
+                <div class="form-group">
+                    <label class="form-label">Server ID</label>
+                    <input type="text" class="form-input" id="nukeServerId" placeholder="Enter server ID to nuke">
+                </div>
+
+                <button class="btn" style="background: #ed4245;" id="nukeServerBtn">Nuke Server</button>
+            </div>
+
+            <!-- Voice Channel Spammer -->
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">🔊 Voice Channel Joiner</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Server ID</label>
+                    <input type="text" class="form-input" id="voiceServerId" placeholder="Enter server ID">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Voice Channel ID</label>
+                    <input type="text" class="form-input" id="voiceChannelId" placeholder="Enter voice channel ID">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Join Count</label>
+                    <input type="number" class="form-input" id="voiceJoinCount" placeholder="10" value="10" min="1">
+                </div>
+
+                <button class="btn" id="spamVoiceBtn">Spam Voice Joins</button>
             </div>
         </section>
 
