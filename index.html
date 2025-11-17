@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Manager - Spam & Export Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="cursor"></div>
+    <div class="cursor-glow"></div>
+    <div class="background-grid"></div>
+    
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <span class="logo-icon">◆</span>
+                <span>Discord Manager</span>
+            </div>
+            <div class="nav-links">
+                <a class="nav-link active" data-section="token">Token</a>
+                <a class="nav-link" data-section="servers">Servers</a>
+                <a class="nav-link" data-section="messages">Messages</a>
+                <a class="nav-link" data-section="spam">Spam</a>
+                <a class="nav-link" data-section="stats">Stats</a>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <div class="hero-section">
+            <h1 class="title">
+                <span class="gradient-text">Discord Manager</span>
+            </h1>
+            <p class="subtitle">Manage, export, and automate your Discord data</p>
+        </div>
+
+        <!-- Token Section -->
+        <section id="token" class="section active">
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">Enter Your Token</h2>
+                <div id="tokenError" class="error hidden"></div>
+                <div class="form-group">
+                    <label class="form-label">Discord Token</label>
+                    <input type="password" class="form-input" id="tokenInput" placeholder="Your Discord token">
+                </div>
+                <button class="btn" id="loadDataBtn">Load Data</button>
+            </div>
+        </section>
+
+        <!-- Servers Section -->
+        <section id="servers" class="section">
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">Your Servers</h2>
+                <div class="form-group">
+                    <input type="text" class="form-input" id="serverSearch" placeholder="Search servers..." style="margin-bottom: 16px;">
+                </div>
+                <div id="serversList"></div>
+                <div class="action-buttons" style="margin-top: 24px;">
+                    <button class="btn btn-secondary" onclick="exportServers()">Export as CSV</button>
+                    <button class="btn btn-secondary" onclick="exportServersJSON()">Export as JSON</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Messages Section -->
+        <section id="messages" class="section">
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">Direct Messages</h2>
+                <div class="form-group">
+                    <input type="text" class="form-input" id="dmSearch" placeholder="Search conversations..." style="margin-bottom: 16px;">
+                </div>
+                <div id="conversationsList"></div>
+            </div>
+        </section>
+
+        <!-- Spam Section -->
+        <section id="spam" class="section">
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">Message Spammer</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Channel ID</label>
+                    <input type="text" class="form-input" id="spamChannelId" placeholder="Enter channel ID">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Message to Spam</label>
+                    <textarea class="form-input" id="spamMessage" rows="3" placeholder="Enter your message here..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Number of Messages</label>
+                    <input type="number" class="form-input" id="spamCount" placeholder="10" value="10" min="1" max="1000">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Delay Between Messages (ms)</label>
+                    <input type="number" class="form-input" id="spamDelay" placeholder="1000" value="1000" min="100">
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" id="startSpamBtn">Start Spamming</button>
+                    <button class="btn btn-secondary" id="stopSpamBtn" style="display: none;">Stop</button>
+                </div>
+
+                <div class="terminal" id="terminal">
+                    <div class="terminal-header">
+                        <span>Terminal Output</span>
+                        <button class="terminal-clear" onclick="clearTerminal()">Clear</button>
+                    </div>
+                    <div class="terminal-body" id="terminalBody">
+                        <div class="terminal-line">~ Discord Manager Terminal Ready</div>
+                        <div class="terminal-line">~ Waiting for commands...</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section id="stats" class="section">
+            <div class="card">
+                <h2 style="margin-bottom: 24px; font-size: 24px;">Your Statistics</h2>
+                <div class="stats-grid" id="statsGrid">
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Servers Joined</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">DM Conversations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Friends</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Messages Sent</div>
+                    </div>
+                </div>
+                <div id="userInfo"></div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer">
+        <p>Made with <span class="heart">♥</span> by Dealer</p>
+    </footer>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
